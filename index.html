@@ -1,0 +1,317 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Mentes Criativas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: uma coluna central com cartão de quiz; barra de progresso em 3 segmentos no topo do cartão. */
+:root {
+  --bg: #EDF0F7;
+  --surface: #FFFFFF;
+  --ink: #141A33;
+  --muted: #5B6485;
+  --line: #D5DAEA;
+  --accent: #2F4BFF;
+  --accent-ink: #FFFFFF;
+  --good: #13795B;
+  --good-bg: #DDF3EA;
+  --bad: #B3261E;
+  --bad-bg: #FBE4E1;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1226; --surface: #171C38; --ink: #EEF0FA; --muted: #9AA3C7; --line: #2A3158;
+    --accent: #7E92FF; --accent-ink: #0E1226;
+    --good: #5FD4A5; --good-bg: #12352B; --bad: #FF8F86; --bad-bg: #3A1B1E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1226; --surface: #171C38; --ink: #EEF0FA; --muted: #9AA3C7; --line: #2A3158;
+  --accent: #7E92FF; --accent-ink: #0E1226;
+  --good: #5FD4A5; --good-bg: #12352B; --bad: #FF8F86; --bad-bg: #3A1B1E;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-inline: 16px;
+  padding-block: 24px 40px;
+  min-height: 100vh;
+}
+.app { max-width: 620px; margin-inline: auto; display: flex; flex-direction: column; gap: 16px; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 1.125rem; letter-spacing: -0.01em; }
+.best { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2rem, 8vw, 2.75rem); }
+h2 { font-size: clamp(1.375rem, 5vw, 1.75rem); line-height: 1.2; }
+p { margin: 0; }
+.lead { color: var(--muted); max-width: 52ch; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.btn {
+  font: inherit;
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 0;
+  border-radius: 14px;
+  padding: 14px 22px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: translateY(1px); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+.rules { display: flex; gap: 8px; flex-wrap: wrap; padding: 0; margin: 0; list-style: none; }
+.rules li {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 12px;
+  color: var(--muted);
+}
+
+.progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.progress span { height: 6px; border-radius: 3px; background: var(--line); transition: background 0.3s ease; }
+.progress span.done { background: var(--accent); }
+.meta { display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-mono); font-size: 0.8125rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.options { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.opt {
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  min-width: 0;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt .key {
+  flex: none;
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  border-radius: 9px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+.opt .txt { min-width: 0; overflow-wrap: anywhere; }
+.opt.right { background: var(--good-bg); border-color: var(--good); }
+.opt.wrong { background: var(--bad-bg); border-color: var(--bad); }
+.opt.right .key { background: var(--good); color: var(--good-bg); border-color: var(--good); }
+.opt.wrong .key { background: var(--bad); color: var(--bad-bg); border-color: var(--bad); }
+
+.feedback { min-height: 1.5em; font-weight: 500; }
+.feedback.ok { color: var(--good); }
+.feedback.no { color: var(--bad); }
+
+.score-big { font-family: var(--font-display); font-weight: 800; font-size: clamp(3.5rem, 18vw, 5.5rem); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.score-big small { font-size: 0.4em; color: var(--muted); font-weight: 600; letter-spacing: 0; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<main class="app">
+  <header class="top">
+    <span class="brand">Mentes Criativas</span>
+    <span class="best" id="best">Melhor pontuação: —</span>
+  </header>
+
+  <section class="card" id="tela-inicio">
+    <p class="eyebrow">Quiz de 3 perguntas</p>
+    <h1>O Desafio da Superação</h1>
+    <p class="lead">Teste sua inteligência e supere os desafios. Cada resposta certa vale 10 pontos, até 30 no total.</p>
+    <ul class="rules">
+      <li>3 perguntas</li>
+      <li>10 pontos cada</li>
+      <li>jogue quantas vezes quiser</li>
+    </ul>
+    <button class="btn" id="btn-comecar" type="button">Começar</button>
+  </section>
+
+  <section class="card" id="tela-quiz" hidden>
+    <div class="progress" id="progresso" aria-hidden="true"></div>
+    <div class="meta">
+      <span id="contador">Pergunta 1 de 3</span>
+      <span id="pontos">0 pts</span>
+    </div>
+    <h2 id="pergunta"></h2>
+    <ul class="options" id="opcoes"></ul>
+    <p class="feedback" id="feedback" aria-live="polite"></p>
+    <button class="btn" id="btn-proxima" type="button" hidden>Próxima</button>
+  </section>
+
+  <section class="card" id="tela-resultado" hidden>
+    <p class="eyebrow">Resultado final</p>
+    <div class="score-big"><span id="nota">0</span><small> / 30</small></div>
+    <h2 id="mensagem"></h2>
+    <button class="btn" id="btn-repetir" type="button">Tentar novamente</button>
+  </section>
+</main>
+
+<script>
+// Estrutura de dados: lista de perguntas, cada uma com opções e a letra da resposta certa.
+var perguntas = [
+  { pergunta: "Quem é considerada a primeira programadora da história?",
+    opcoes: ["Alan Turing", "Ada Lovelace", "Marie Curie"], resposta: "B" },
+  { pergunta: "Qual cientista superou desafios e formulou a Teoria da Relatividade?",
+    opcoes: ["Albert Einstein", "Isaac Newton", "Nikola Tesla"], resposta: "A" },
+  { pergunta: "O que move as mentes criativas a superarem obstáculos?",
+    opcoes: ["Desistir fácil", "Curiosidade e persistência", "Sorte"], resposta: "B" }
+];
+var LETRAS = ["A", "B", "C"];
+var indice = 0, pontuacao = 0, respondida = false;
+
+function $(id) { return document.getElementById(id); }
+
+// FUNÇÃO: mostra uma tela e esconde as outras
+function mostrarTela(id) {
+  ["tela-inicio", "tela-quiz", "tela-resultado"].forEach(function (t) { $(t).hidden = (t !== id); });
+}
+
+function lerMelhor() { try { return localStorage.getItem("mc-melhor"); } catch (e) { return null; } }
+function gravarMelhor(v) { try { localStorage.setItem("mc-melhor", String(v)); } catch (e) {} }
+function atualizarMelhor() {
+  var m = lerMelhor();
+  $("best").textContent = "Melhor pontuação: " + (m === null ? "—" : m + " pts");
+}
+
+function iniciar() {
+  indice = 0; pontuacao = 0;
+  mostrarTela("tela-quiz");
+  mostrarPergunta();
+}
+
+function mostrarPergunta() {
+  var item = perguntas[indice];
+  respondida = false;
+  $("pergunta").textContent = item.pergunta;
+  $("contador").textContent = "Pergunta " + (indice + 1) + " de " + perguntas.length;
+  $("pontos").textContent = pontuacao + " pts";
+  $("feedback").textContent = ""; $("feedback").className = "feedback";
+  $("btn-proxima").hidden = true;
+
+  var barra = $("progresso"); barra.innerHTML = "";
+  for (var i = 0; i < perguntas.length; i++) {            // FOR: segmentos de progresso
+    var s = document.createElement("span");
+    if (i < indice) s.className = "done";
+    barra.appendChild(s);
+  }
+
+  var lista = $("opcoes"); lista.innerHTML = "";
+  for (var j = 0; j < item.opcoes.length; j++) {          // FOR: uma opção por botão
+    var li = document.createElement("li");
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "opt"; b.dataset.letra = LETRAS[j];
+    b.innerHTML = '<span class="key">' + LETRAS[j] + '</span><span class="txt"></span>';
+    b.querySelector(".txt").textContent = item.opcoes[j];
+    b.addEventListener("click", function (ev) { responder(ev.currentTarget.dataset.letra); });
+    li.appendChild(b); lista.appendChild(li);
+  }
+}
+
+function responder(letra) {
+  if (respondida) return;
+  respondida = true;
+  var item = perguntas[indice];
+  var fb = $("feedback");
+
+  // IF / ELSE: decide com base na resposta
+  if (letra === item.resposta) {
+    pontuacao += 10;
+    fb.textContent = "Correto! Você demonstrou uma mente afiada.";
+    fb.className = "feedback ok";
+  } else {
+    fb.textContent = "Incorreto! A superação vem do aprendizado com os erros. Resposta certa: " + item.resposta + ".";
+    fb.className = "feedback no";
+  }
+
+  document.querySelectorAll(".opt").forEach(function (b) {
+    b.disabled = true;
+    if (b.dataset.letra === item.resposta) b.classList.add("right");
+    else if (b.dataset.letra === letra) b.classList.add("wrong");
+  });
+  $("pontos").textContent = pontuacao + " pts";
+  var prox = $("btn-proxima");
+  prox.textContent = indice === perguntas.length - 1 ? "Ver resultado" : "Próxima";
+  prox.hidden = false; prox.focus();
+}
+
+function proxima() {
+  indice++;
+  if (indice < perguntas.length) mostrarPergunta(); else mostrarResultado();
+}
+
+function mostrarResultado() {
+  var msg;
+  // IF / ELIF / ELSE: faixas de pontuação
+  if (pontuacao === 30) msg = "Incrível! Você alcançou o topo da superação criativa!";
+  else if (pontuacao >= 10) msg = "Bom trabalho! Com mais prática você chegará ao topo.";
+  else msg = "Não desista! A persistência é a chave da inteligência.";
+
+  $("nota").textContent = pontuacao;
+  $("mensagem").textContent = msg;
+  var m = lerMelhor();
+  if (m === null || pontuacao > Number(m)) gravarMelhor(pontuacao);
+  atualizarMelhor();
+  mostrarTela("tela-resultado");
+}
+
+$("btn-comecar").addEventListener("click", iniciar);
+$("btn-proxima").addEventListener("click", proxima);
+$("btn-repetir").addEventListener("click", iniciar);
+document.addEventListener("keydown", function (e) {
+  var k = e.key.toUpperCase();
+  if (!$("tela-quiz").hidden && !respondida && LETRAS.indexOf(k) > -1) responder(k);
+});
+atualizarMelhor();
+</script>
+
+</body></html>
